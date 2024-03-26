@@ -74,9 +74,10 @@ GROUP BY teachers.id;
 
 
 
-7. BONUS: Selezionare per ogni studente il numero di tentativi 
+7. BONUS: 
+
+1. Selezionare per ogni studente il numero di tentativi 
  sostenuti per ogni esame, stampando anche il voto massimo. 
- Successivamente, filtrare i tentativi con voto minimo 18.
 
 SELECT exam_student.student_id, students.surname AS cognome_studente, students.name AS nome_studente, COUNT(*) AS ripetizioni_esame, MAX(exam_student.vote) AS voto_massimo
 FROM `exam_student`
@@ -84,3 +85,14 @@ INNER JOIN students
 ON exam_student.student_id = students.id
 GROUP BY exam_student.student_id 
 HAVING ripetizioni_esame > 1;
+
+2. Successivamente, filtrare i tentativi con voto minimo 18.
+
+SELECT exam_student.student_id, students.surname AS cognome_studente, students.name AS nome_studente, 
+SUM(IF(exam_student.vote >= 18, 1, 0) ) AS tentativi_voto_18
+    
+FROM exam_student
+INNER JOIN students 
+ON exam_student.student_id = students.id
+
+GROUP BY exam_student.student_id;
