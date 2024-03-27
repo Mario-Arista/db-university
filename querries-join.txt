@@ -79,20 +79,23 @@ GROUP BY teachers.id;
 1. Selezionare per ogni studente il numero di tentativi 
  sostenuti per ogni esame, stampando anche il voto massimo. 
 
-SELECT exam_student.student_id, students.surname AS cognome_studente, students.name AS nome_studente, COUNT(*) AS ripetizioni_esame, MAX(exam_student.vote) AS voto_massimo
-FROM `exam_student`
-INNER JOIN students
-ON exam_student.student_id = students.id
-GROUP BY exam_student.student_id 
-HAVING ripetizioni_esame > 1;
+SELECT students.name AS 'nome_studente', students.surname AS 'cognome_studente', COUNT(courses.id) AS 'tentativi', courses.name AS 'corso', MAX(exam_student.vote) AS 'voto_massimo'
+FROM students
+
+INNER JOIN exam_student ON students.id = exam_student.student_id
+INNER JOIN exams ON exam_student.exam_id = exams.id
+INNER JOIN courses ON exams.course_id = courses.id
+
+GROUP BY students.id, exams.course_id;
 
 2. Successivamente, filtrare i tentativi con voto minimo 18.
 
-SELECT exam_student.student_id, students.surname AS cognome_studente, students.name AS nome_studente, 
-SUM(IF(exam_student.vote >= 18, 1, 0) ) AS tentativi_voto_18
-    
-FROM exam_student
-INNER JOIN students 
-ON exam_student.student_id = students.id
+SELECT students.name AS 'nome_studente', students.surname AS 'cognome_studente', COUNT(courses.id) AS 'tentativi', courses.name AS 'corso', MAX(exam_student.vote) AS 'voto_massimo'
+FROM students
 
-GROUP BY exam_student.student_id;
+INNER JOIN exam_student ON students.id = exam_student.student_id
+INNER JOIN exams ON exam_student.exam_id = exams.id
+INNER JOIN courses ON exams.course_id = courses.id
+
+WHERE exam_student.vote >= 18
+GROUP BY students.id, exams.course_id;
